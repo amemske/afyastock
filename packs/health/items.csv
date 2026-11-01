@@ -1,0 +1,16 @@
+code,name,category,unit,unit_cost_kes,shelf_life_months,base_monthly_use,seasonality,annual_trend
+AL6,Artemether-lumefantrine 20/120 mg (6x1 pack),antimalarial,pack,60,24,40,malaria,0.00
+RDT,Malaria rapid diagnostic test,diagnostic,test,80,24,55,malaria,0.00
+AMX,Amoxicillin 250 mg dispersible tablets (pack of 10),antibiotic,pack,40,36,60,respiratory,0.02
+ORS,Oral rehydration salts sachet,diarrhoeal,sachet,15,36,80,diarrhoea,0.00
+ZNC,Zinc sulphate 20 mg dispersible tablets (pack of 10),diarrhoeal,pack,30,36,50,diarrhoea,0.00
+PCM,Paracetamol 500 mg tablet,analgesic,tablet,1,48,1500,none,0.03
+CTX,Cotrimoxazole 480 mg tablet,antibiotic,tablet,2,36,600,none,0.00
+MET,Metformin 500 mg tablet,antidiabetic,tablet,2,36,400,none,0.08
+AML,Amlodipine 5 mg tablet,antihypertensive,tablet,2,36,300,none,0.08
+IFA,Ferrous sulphate + folic acid tablet,maternal health,tablet,1,36,500,none,0.02
+OXY,Oxytocin 10 IU injection,maternal health,ampoule,50,24,6,none,0.02
+DMPA,Medroxyprogesterone acetate 150 mg injection,family planning,vial,120,36,25,none,0.03
+SAL,Salbutamol 100 mcg inhaler,respiratory,inhaler,250,24,4,respiratory,0.05
+CRO,Ceftriaxone 1 g injection,antibiotic,vial,70,36,10,none,0.02
+ALB,Albendazole 400 mg tablet,anthelmintic,tablet,10,36,100,none,0.00

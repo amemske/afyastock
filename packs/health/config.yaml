@@ -1,0 +1,67 @@
+# Health domain pack for AfyaStock's synthetic data generator.
+# Everything here is ILLUSTRATIVE: a fictional sub-county with realistic patterns,
+# not real facilities or real figures.
+
+pack: health
+labels:                      # how the dashboard names the generic concepts
+  location: Facility
+  item: Medicine
+
+region:
+  name: Mlima Sub-County (fictional)
+  center: [-0.45, 37.10]     # lat, lon used only to place facilities and compute distances
+  radius_km: 35
+
+period:
+  start: 2023-11-01          # first reporting month
+  months: 36                 # last month = 2026-10-01
+
+seed: 42                     # same seed -> identical dataset every run
+
+locations:
+  rural_share: 0.7
+  types:
+    - type: dispensary
+      count: 30
+      code_prefix: DSP
+      size_factor: [0.6, 1.4]   # demand multiplier range vs. a typical dispensary
+    - type: health_centre
+      count: 8
+      code_prefix: HC
+      size_factor: [2.0, 3.5]
+    - type: hospital
+      count: 2
+      code_prefix: HSP
+      size_factor: [6.0, 9.0]
+
+demand:
+  noise_sd: 0.15             # month-to-month randomness (lognormal)
+  rural_malaria_boost: 1.25  # rural facilities see more malaria
+  outbreak_prob: 0.01        # chance per facility-medicine-month of a demand spike
+  outbreak_multiplier: [1.8, 3.0]
+  outbreak_months: 2
+
+# Monthly demand multipliers, January..December (illustrative)
+seasonality:
+  none:        [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+  malaria:     [1.2, 1.0, 0.9, 1.0, 1.3, 1.5, 1.3, 1.0, 0.9, 0.9, 1.1, 1.3]
+  diarrhoea:   [1.2, 1.2, 1.1, 1.2, 1.2, 1.0, 0.9, 0.9, 0.9, 1.0, 1.1, 1.1]
+  respiratory: [0.9, 0.9, 1.0, 1.1, 1.1, 1.3, 1.4, 1.3, 1.0, 0.9, 0.9, 0.9]
+
+supply:                      # a simple max-min resupply system with real-world friction
+  initial_months_of_stock: [1.0, 3.0]
+  min_months: 1.0            # reorder when stock falls below this many months of use
+  max_months: 2.5            # order up to this many months of use
+  fill_rate: [0.4, 1.0]      # suppliers often deliver only part of an order
+  delay_prob: 0.3           # chance a delivery arrives a month late
+  remaining_life_used: [0, 6]   # months of shelf life already used when stock arrives
+  push_prob: 0.04            # chance of an unrequested bulk delivery (creates surplus)
+  push_months_of_stock: 6
+  push_remaining_life: [6, 10]  # bulk deliveries often arrive close to expiry
+
+reporting:                   # the messiness the validation pipeline must handle
+  missed_rate:
+    rural: 0.08
+    urban: 0.03
+  copy_error_rate: 0.02      # one number copied wrongly (balance no longer adds up)
+  zero_report_rate: 0.01     # all zeros submitted instead of real figures
