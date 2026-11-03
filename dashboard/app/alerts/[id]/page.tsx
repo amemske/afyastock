@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ChevronLeft, CircleAlert, Info, MapPin, ShoppingCart, Sparkles, Truck } from 'lucide-react';
+import { ChevronLeft, CircleAlert, Info, MapPin, MessageSquare, ShoppingCart, Sparkles, Truck } from 'lucide-react';
 import { api, ApiError } from '@/lib/api';
 import { STATUS, cover, kes, monthYear, num, pct, placeType, qty } from '@/lib/format';
 import StockChart from './StockChart';
@@ -53,6 +53,14 @@ export default async function AlertPage({ params }: { params: Promise<{ id: stri
           <MapPin size={16} aria-hidden />
           {a.location_name}
           {showType && `, ${typeLabel.toLowerCase()}`}, {a.rural ? 'rural' : 'urban'}
+        </p>
+        <p style={{ margin: '0.75rem 0 0' }}>
+          <Link
+            className="btn btn-ghost"
+            href={`/assistant?q=${encodeURIComponent(`Why is ${a.item_name} flagged at ${a.location_name}, and what should I do?`)}`}
+          >
+            <MessageSquare size={16} aria-hidden /> Ask about this alert
+          </Link>
         </p>
       </header>
 

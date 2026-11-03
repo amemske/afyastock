@@ -10,7 +10,7 @@ import { PlansService } from './plans.service.js';
 let PlansModule = class PlansModule {
 };
 PlansModule = __decorate([
-    Module({ controllers: [PlansController], providers: [PlansService] })
+    Module({ controllers: [PlansController], providers: [PlansService], exports: [PlansService] })
 ], PlansModule);
 export { PlansModule };
 //# sourceMappingURL=plans.module.js.map

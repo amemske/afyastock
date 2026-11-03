@@ -615,3 +615,31 @@ a:focus-visible, button:focus-visible, select:focus-visible {
 .actions { display: grid; gap: 0.625rem; margin: 0; padding: 0; list-style: none; }
 .actions li { display: flex; gap: 0.625rem; align-items: flex-start; }
 .actions svg { flex: none; margin-top: 0.15rem; color: var(--primary); }
+
+/* ---------- assistant ---------- */
+
+.chat { display: flex; flex-direction: column; min-height: 60vh; }
+.chat-log { flex: 1; display: flex; flex-direction: column; gap: 0.875rem; padding: 1.125rem; overflow-y: auto; max-height: 70vh; }
+.chat-empty p { margin: 0 0 1rem; color: var(--text-muted); max-width: 40rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  font: inherit; font-size: 0.875rem; padding: 0.45rem 0.8rem; cursor: pointer;
+  border: 1px solid var(--border-strong); border-radius: 999px; background: var(--panel); color: var(--primary-strong);
+}
+.chip:hover { background: var(--primary-soft); }
+.msg { max-width: 44rem; padding: 0.75rem 0.9rem; border-radius: var(--radius); line-height: 1.55; }
+.msg p { margin: 0 0 0.5rem; }
+.msg p:last-child { margin-bottom: 0; }
+.msg ul { margin: 0.25rem 0 0.5rem; padding-left: 1.2rem; }
+.msg-user { align-self: flex-end; background: var(--primary); color: #fff; }
+.msg-assistant { align-self: flex-start; background: var(--panel-muted); border: 1px solid var(--border); }
+.msg-error { border-color: var(--red); background: var(--red-soft); color: var(--red); }
+.msg-busy { color: var(--text-muted); font-style: italic; }
+.msg-sources { list-style: none; margin: 0.6rem 0 0 !important; padding: 0.5rem 0 0 !important; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 0.35rem 0.9rem; font-size: 0.8125rem; color: var(--text-muted); }
+.msg-sources li { display: inline-flex; align-items: center; gap: 0.3rem; }
+.chat-input { display: flex; gap: 0.6rem; align-items: flex-end; padding: 0.875rem 1.125rem; border-top: 1px solid var(--border); }
+.chat-input textarea {
+  flex: 1; font: inherit; resize: vertical; min-height: 2.75rem; padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm); color: var(--text);
+}
+.chat-input .btn:disabled { opacity: 0.55; cursor: default; }

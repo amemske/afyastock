@@ -8,6 +8,7 @@ const LINKS = [
   { href: '/', label: 'Stock alerts', icon: LayoutList, match: (p: string) => p === '/' || p.startsWith('/alerts') },
   { href: '/transfers', label: 'Transfers', icon: ArrowLeftRight, match: (p: string) => p.startsWith('/transfers') },
   { href: '/reorders', label: 'Reorders', icon: Wallet, match: (p: string) => p.startsWith('/reorders') },
+  { href: '/assistant', label: 'Ask AfyaStock', icon: MessageSquare, match: (p: string) => p.startsWith('/assistant') },
 ];
 
 export default function Nav() {
@@ -22,11 +23,6 @@ export default function Nav() {
             </Link>
           </li>
         ))}
-        <li>
-          <span className="nav-item soon" aria-disabled="true">
-            <MessageSquare size={18} aria-hidden /> Ask AfyaStock <small>Soon</small>
-          </span>
-        </li>
       </ul>
     </nav>
   );
