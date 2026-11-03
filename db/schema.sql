@@ -180,3 +180,27 @@ CREATE INDEX idx_stock_reports_period ON stock_reports (period);
 CREATE INDEX idx_forecasts_lookup     ON forecasts (run_id, location_id, item_id, period);
 CREATE INDEX idx_alerts_run_risk      ON alerts (run_id, risk_score DESC);
 CREATE INDEX idx_chunks_embedding     ON guidance_chunks USING hnsw (embedding vector_cosine_ops);
+
+-- ---------- Essential medicines reference and search (added by the guidance loader) ----------
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+CREATE TABLE IF NOT EXISTS essential_medicines (
+    id             SERIAL PRIMARY KEY,
+    document_id    INTEGER NOT NULL REFERENCES guidance_documents(id) ON DELETE CASCADE,
+    entry_number   TEXT NOT NULL,
+    name           TEXT NOT NULL,
+    dose_form      TEXT,
+    strength       TEXT,
+    level_of_use   INTEGER,
+    notes          TEXT,
+    section        TEXT,
+    page           INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_em_name_trgm ON essential_medicines USING gin (name gin_trgm_ops);
+
+ALTER TABLE guidance_chunks ADD COLUMN IF NOT EXISTS title TEXT;
+ALTER TABLE guidance_chunks ADD COLUMN IF NOT EXISTS search tsvector
+    GENERATED ALWAYS AS (to_tsvector('english', coalesce(title, '') || ' ' || content)) STORED;
+CREATE INDEX IF NOT EXISTS idx_chunks_search ON guidance_chunks USING gin (search);
+CREATE INDEX IF NOT EXISTS idx_chunks_title_trgm ON guidance_chunks USING gin (title gin_trgm_ops);
