@@ -4,26 +4,29 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module.js';
 
-describe('AppController (e2e)', () => {
+// Needs the database running with data from the Python jobs.
+describe('AfyaStock API (e2e)', () => {
   let app: INestApplication<App>;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix('api');
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  it('GET /api/health', () => request(app.getHttpServer()).get('/api/health').expect(200, { status: 'ok' }));
+
+  it('GET /api/alerts returns a ranked list with counts', async () => {
+    const res = await request(app.getHttpServer()).get('/api/alerts?limit=5').expect(200);
+    expect(res.body.items.length).toBeLessThanOrEqual(5);
+    expect(res.body.counts).toHaveProperty('out_now');
   });
 
-  afterEach(async () => {
+  it('GET /api/alerts rejects an unknown status', () =>
+    request(app.getHttpServer()).get('/api/alerts?status=urgent').expect(400));
+
+  afterAll(async () => {
     await app.close();
   });
 });

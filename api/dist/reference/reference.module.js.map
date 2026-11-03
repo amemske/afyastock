@@ -1,0 +1,1 @@
+{"version":3,"file":"reference.module.js","sourceRoot":"","sources":["../../src/reference/reference.module.ts"],"names":[],"mappings":";;;;;;AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,gBAAgB,CAAC;AACxC,OAAO,EAAE,mBAAmB,EAAE,MAAM,2BAA2B,CAAC;AAGzD,IAAM,eAAe,GAArB,MAAM,eAAe;CAAG,CAAA;AAAlB,eAAe;IAD3B,MAAM,CAAC,EAAE,WAAW,EAAE,CAAC,mBAAmB,CAAC,EAAE,CAAC;GAClC,eAAe,CAAG"}
