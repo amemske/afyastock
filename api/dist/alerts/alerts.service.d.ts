@@ -31,5 +31,9 @@ export declare class AlertsService {
         history: Record<string, unknown>[];
         forecast: Record<string, unknown>[];
         issues: Record<string, unknown>[];
+        actions: {
+            transfers: Record<string, unknown>[];
+            reorder: Record<string, unknown>;
+        };
     }>;
 }

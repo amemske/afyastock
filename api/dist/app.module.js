@@ -9,11 +9,12 @@ import { AppController } from './app.controller.js';
 import { DatabaseModule } from './database/database.module.js';
 import { AlertsModule } from './alerts/alerts.module.js';
 import { ReferenceModule } from './reference/reference.module.js';
+import { PlansModule } from './plans/plans.module.js';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     Module({
-        imports: [DatabaseModule, ReferenceModule, AlertsModule],
+        imports: [DatabaseModule, ReferenceModule, AlertsModule, PlansModule],
         controllers: [AppController],
     })
 ], AppModule);

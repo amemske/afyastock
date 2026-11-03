@@ -26,6 +26,22 @@ describe('AfyaStock API (e2e)', () => {
   it('GET /api/alerts rejects an unknown status', () =>
     request(app.getHttpServer()).get('/api/alerts?status=urgent').expect(400));
 
+  it('GET /api/transfers groups suggestions into trips', async () => {
+    const res = await request(app.getHttpServer()).get('/api/transfers').expect(200);
+    expect(Array.isArray(res.body.trips)).toBe(true);
+  });
+
+  it('GET /api/reorders flags orders against the chosen budget', async () => {
+    const res = await request(app.getHttpServer()).get('/api/reorders?budget=50000').expect(200);
+    if (res.body.summary) {
+      expect(res.body.summary.budget_kes).toBe(50000);
+      expect(res.body.summary.cost_funded_kes).toBeLessThanOrEqual(50000);
+    }
+  });
+
+  it('GET /api/reorders rejects a non-numeric budget', () =>
+    request(app.getHttpServer()).get('/api/reorders?budget=lots').expect(400));
+
   afterAll(async () => {
     await app.close();
   });

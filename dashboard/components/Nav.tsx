@@ -4,30 +4,29 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ArrowLeftRight, LayoutList, MessageSquare, Wallet } from 'lucide-react';
 
-const SOON = [
-  { label: 'Transfers', icon: ArrowLeftRight },
-  { label: 'Reorders', icon: Wallet },
-  { label: 'Ask AfyaStock', icon: MessageSquare },
+const LINKS = [
+  { href: '/', label: 'Stock alerts', icon: LayoutList, match: (p: string) => p === '/' || p.startsWith('/alerts') },
+  { href: '/transfers', label: 'Transfers', icon: ArrowLeftRight, match: (p: string) => p.startsWith('/transfers') },
+  { href: '/reorders', label: 'Reorders', icon: Wallet, match: (p: string) => p.startsWith('/reorders') },
 ];
 
 export default function Nav() {
   const path = usePathname();
-  const onAlerts = path === '/' || path.startsWith('/alerts');
   return (
     <nav aria-label="Main">
       <ul className="nav">
-        <li>
-          <Link href="/" aria-current={onAlerts ? 'page' : undefined}>
-            <LayoutList size={18} aria-hidden /> Stock alerts
-          </Link>
-        </li>
-        {SOON.map(({ label, icon: Icon }) => (
-          <li key={label}>
-            <span className="nav-item soon" aria-disabled="true">
-              <Icon size={18} aria-hidden /> {label} <small>Soon</small>
-            </span>
+        {LINKS.map(({ href, label, icon: Icon, match }) => (
+          <li key={href}>
+            <Link href={href} aria-current={match(path) ? 'page' : undefined}>
+              <Icon size={18} aria-hidden /> {label}
+            </Link>
           </li>
         ))}
+        <li>
+          <span className="nav-item soon" aria-disabled="true">
+            <MessageSquare size={18} aria-hidden /> Ask AfyaStock <small>Soon</small>
+          </span>
+        </li>
       </ul>
     </nav>
   );

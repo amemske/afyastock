@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ChevronLeft, CircleAlert, Info, MapPin, Sparkles } from 'lucide-react';
+import { ChevronLeft, CircleAlert, Info, MapPin, ShoppingCart, Sparkles, Truck } from 'lucide-react';
 import { api, ApiError } from '@/lib/api';
-import { STATUS, cover, monthYear, num, pct, placeType } from '@/lib/format';
+import { STATUS, cover, kes, monthYear, num, pct, placeType, qty } from '@/lib/format';
 import StockChart from './StockChart';
 
 const RULES: Record<string, string> = {
@@ -26,7 +26,7 @@ export default async function AlertPage({ params }: { params: Promise<{ id: stri
     if (e instanceof ApiError && e.status === 404) notFound();
     throw e;
   }
-  const { alert: a, history, forecast, issues } = data;
+  const { alert: a, history, forecast, issues, actions } = data;
 
   // Facts the system knows for certain come first; model reasons (SHAP) follow and are marked as such.
   const facts = a.drivers.filter((d) => d.effect === undefined);
@@ -78,6 +78,39 @@ export default async function AlertPage({ params }: { params: Promise<{ id: stri
           <dd>{cover(a.months_of_stock).replace(' of stock', '')}</dd>
         </div>
       </dl>
+
+      {actions && (actions.transfers.length > 0 || actions.reorder) && (
+        <section className="panel" style={{ marginBottom: '1rem' }} aria-labelledby="actions">
+          <div className="panel-head">
+            <h2 id="actions">Suggested actions</h2>
+          </div>
+          <div className="panel-body">
+            <ul className="actions">
+              {actions.transfers.map((t) => (
+                <li key={t.from_name}>
+                  <Truck size={18} aria-hidden />
+                  <span>
+                    Transfer <strong className="num">{qty(t.quantity, a.unit)}</strong> from {t.from_name}, about{' '}
+                    {Math.round(t.distance_km)} km away. <Link href="/transfers">See all transfers</Link>
+                  </span>
+                </li>
+              ))}
+              {actions.reorder && (
+                <li>
+                  <ShoppingCart size={18} aria-hidden />
+                  <span>
+                    {actions.transfers.length > 0 ? 'Then order ' : 'Order '}
+                    <strong className="num">{qty(actions.reorder.quantity, a.unit)}</strong> ({kes(actions.reorder.cost)})
+                    {actions.transfers.length > 0 ? ' to top up to 2.5 months of stock' : ''}: priority{' '}
+                    {actions.reorder.rank} of {actions.reorder.of_total} in the order plan.{' '}
+                    <Link href="/reorders">See the order plan</Link>
+                  </span>
+                </li>
+              )}
+            </ul>
+          </div>
+        </section>
+      )}
 
       <section className="panel" aria-labelledby="history">
         <div className="panel-head">

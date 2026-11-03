@@ -65,3 +65,17 @@ reporting:                   # the messiness the validation pipeline must handle
     urban: 0.03
   copy_error_rate: 0.02      # one number copied wrongly (balance no longer adds up)
   zero_report_rate: 0.01     # all zeros submitted instead of real figures
+
+# Priorities for the optimiser (illustrative).
+# VEN: Vital / Essential / Non-essential, as used in Kenyan supply-chain planning.
+optimiser:
+  ven_weights: {V: 3, E: 2, N: 1}
+  max_transfer_km: 40          # straight-line distance limit between facilities
+  road_factor: 1.3             # straight-line km x this = rough road distance
+  donor_keeps_months: 2.0      # a donor keeps this many months of its own forecast use
+  receiver_target_months: 2.0  # top a facility up to this many months of forecast use
+  min_transfer_share: 0.1      # skip transfers smaller than 10% of the receiver's monthly use
+  min_transfer_value_kes: 500  # skip low-value transfers, unless a vital medicine is already out
+  max_donors_per_facility: 2   # each facility receives from at most this many places (fewer trips)
+  reorder_target_months: 2.5   # order up to this many months of forecast use
+  default_budget_kes: 150000

@@ -331,7 +331,8 @@ def write_db(url: str, locations, items, raw, reset: bool) -> None:
                      shelf_life_months = EXCLUDED.shelf_life_months, attributes = EXCLUDED.attributes""",
                 (i["code"], i["name"], i["category"], i["unit"], float(i["unit_cost_kes"]),
                  int(i["shelf_life_months"]),
-                 json.dumps({"seasonality": i["seasonality"], "illustrative_cost": True})),
+                 json.dumps({"seasonality": i["seasonality"], "illustrative_cost": True,
+                             "ven": i.get("ven", "E")})),
             )
 
         with cur.copy(

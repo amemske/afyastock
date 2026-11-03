@@ -79,7 +79,7 @@ let AlertsService = class AlertsService {
         WHERE a.id = $1`, [id]);
         if (!alert)
             throw new NotFoundException(`No alert with id ${id}`);
-        const [history, forecast, issues] = await Promise.all([
+        const [history, forecast, issues, transfersIn, reorder] = await Promise.all([
             this.db.query(`SELECT to_char(period, 'YYYY-MM-DD') AS period,
                 opening_balance::float8 AS opening, quantity_received::float8 AS received,
                 quantity_used::float8 AS used, losses::float8 AS losses,
@@ -91,8 +91,19 @@ let AlertsService = class AlertsService {
            FROM forecasts WHERE run_id = $1 AND location_id = $2 AND item_id = $3 ORDER BY period`, [alert.run_id, alert.location_id, alert.item_id]),
             this.db.query(`SELECT to_char(period, 'YYYY-MM-DD') AS period, rule, severity, message, action_taken
            FROM data_issues WHERE location_code = $1 AND item_code = $2 ORDER BY period DESC`, [alert.location_code, alert.item_code]),
+            this.db.query(`SELECT f.name AS from_name, t.quantity::int AS quantity, t.distance_km::float8 AS distance_km, t.reason
+           FROM transfer_suggestions t JOIN locations f ON f.id = t.from_location_id
+          WHERE t.to_location_id = $1 AND t.item_id = $2
+            AND t.run_id = (SELECT max(id) FROM model_runs WHERE job = 'optimise'
+                             AND (params->>'forecast_run')::int = $3)`, [alert.location_id, alert.item_id, alert.run_id]),
+            this.db.query(`SELECT p.quantity::int AS quantity, p.cost::float8 AS cost, p.priority_rank AS rank,
+                (SELECT count(*)::int FROM reorder_plans x WHERE x.run_id = p.run_id) AS of_total
+           FROM reorder_plans p
+          WHERE p.location_id = $1 AND p.item_id = $2
+            AND p.run_id = (SELECT max(id) FROM model_runs WHERE job = 'optimise'
+                             AND (params->>'forecast_run')::int = $3)`, [alert.location_id, alert.item_id, alert.run_id]),
         ]);
-        return { alert, history, forecast, issues };
+        return { alert, history, forecast, issues, actions: { transfers: transfersIn, reorder: reorder[0] ?? null } };
     }
 };
 AlertsService = __decorate([

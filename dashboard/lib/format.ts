@@ -44,3 +44,19 @@ export function pct(x: number): string {
 export function num(x: number): string {
   return new Intl.NumberFormat('en-KE', { maximumFractionDigits: 0 }).format(x);
 }
+
+export function kes(x: number): string {
+  return `KES ${new Intl.NumberFormat('en-KE', { maximumFractionDigits: 0 }).format(x)}`;
+}
+
+export const VEN: Record<string, string> = { V: 'Vital', E: 'Essential', N: 'Non-essential' };
+
+/** Urgency (alert horizon in days) -> status key used for colours. */
+export function urgencyStatus(days: number): 'out_now' | 'within_30' | 'within_60' {
+  return days <= 0 ? 'out_now' : days <= 30 ? 'within_30' : 'within_60';
+}
+
+/** 1 inhaler, 5 inhalers. */
+export function qty(n: number, unit: string): string {
+  return `${num(n)} ${unit}${Math.round(n) === 1 ? '' : 's'}`;
+}

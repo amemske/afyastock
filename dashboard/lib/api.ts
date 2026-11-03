@@ -54,6 +54,48 @@ export interface AlertDetail {
   }[];
   forecast: { period: string; predicted: number; lower: number; upper: number }[];
   issues: { period: string; rule: string; severity: string; message: string; action_taken: string }[];
+  actions?: {
+    transfers: { from_name: string; quantity: number; distance_km: number; reason: string }[];
+    reorder: { quantity: number; cost: number; rank: number; of_total: number } | null;
+  };
+}
+
+export interface TransferLine {
+  id: number; from_id: number; from_name: string; to_id: number; to_name: string; distance_km: number;
+  item_id: number; item_name: string; unit: string; ven: string; quantity: number; value_kes: number;
+  urgency_days: number; alert_id: number | null; reason: string;
+}
+
+export interface Trip {
+  from_id: number; from_name: string; to_id: number; to_name: string; distance_km: number;
+  most_urgent_days: number; value_kes: number; lines: TransferLine[];
+}
+
+export interface TransferPlan {
+  run: { id: number } | null;
+  summary: {
+    transfers: number; trips: number; units_moved: number; value_moved_kes: number;
+    expiring_units_saved: number; expiring_value_saved_kes: number;
+    out_of_stock_lines: number; out_of_stock_lines_helped_by_transfer: number;
+    reorder_cost_total_kes: number; reorder_cost_without_transfers_kes: number;
+  } | null;
+  trips: Trip[];
+}
+
+export interface ReorderLine {
+  id: number; rank: number; location_id: number; location_name: string; item_id: number; item_name: string;
+  unit: string; ven: string; quantity: number; cost: number; cumulative_cost: number; remaining_risk: number;
+  urgency_days: number; alert_id: number | null; within_budget: boolean;
+}
+
+export interface ReorderPlan {
+  run: { id: number } | null;
+  summary: {
+    budget_kes: number; lines_total: number; cost_total_kes: number; lines_funded: number; cost_funded_kes: number;
+    vital_funded: number; vital_total: number; expected_stockouts_prevented: number; expected_stockouts_total: number;
+    default_budget_kes: number;
+  } | null;
+  lines: ReorderLine[];
 }
 
 export class ApiError extends Error {
@@ -79,4 +121,6 @@ export const api = {
   items: () => get<Medicine[]>('/items'),
   alerts: (q: URLSearchParams) => get<AlertList>(`/alerts?${q.toString()}`),
   alert: (id: number) => get<AlertDetail>(`/alerts/${id}`),
+  transfers: (q: URLSearchParams) => get<TransferPlan>(`/transfers?${q.toString()}`),
+  reorders: (q: URLSearchParams) => get<ReorderPlan>(`/reorders?${q.toString()}`),
 };
